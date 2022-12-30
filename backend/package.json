@@ -1,0 +1,27 @@
+{
+  "name": "genez-emailer",
+  "version": "1.0.0",
+  "description": "Example on how to use Genezio with emailer",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.2.1",
+    "bcryptjs": "^2.4.3",
+    "deep-email-validator": "^0.1.21",
+    "dotenv": "^16.0.3",
+    "handlebars": "^4.7.7",
+    "html-entities": "^2.3.3",
+    "isemail": "^3.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.1",
+    "node-cron": "^3.0.2",
+    "node-email-validation": "^1.0.4",
+    "nodemailer": "^6.8.0",
+    "underscore": "^1.13.6"
+  }
+}

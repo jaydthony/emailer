@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100vh;
+  max-height: 100%;
+  overflow-y: hidden;
+}
+#root {
+  height: 100%;
+}
+#root,
+.app,
+.sidebar {
+  max-height: 100%;
+}
+.main_content {
+  height: calc(100% - 80px);
+}
+.sidebar ul li {
+  @apply px-2 py-1;
+}
+.sidebar ul li a {
+  @apply rounded-md bg-transparent hover:bg-slate-700;
+}
+.sidebar a.active {
+  @apply bg-slate-500 hover:bg-slate-500;
+}
+.logo_title {
+  height: 81px;
+  background-color: #040818;
+}
+.drawer-toggle:checked ~ .drawer-side {
+  z-index: 1;
+}
+.drawer-toggle:checked ~ header {
+  @apply bg-white;
+}
+thead th,
+tfoot th {
+  @apply bg-slate-100 !important;
+}
+.row {
+  @apply my-8;
+}
+.form-group {
+  @apply my-4 mb-12 flex flex-col gap-4;
+}
+.react-datetime-picker button,
+.react-datetime-picker select,
+.react-datetime-picker div input {
+  width: initial !important;
+  min-width: 30px;
+  padding: 0.5em 1em !important;
+  margin: 0 0.4em;
+  border: 1px solid #fafafa;
+  border-radius: 10px;
+  background: #fff;
+  align-content: baseline;
+  align-items: center;
+  @apply shadow-sm;
+}
+.react-datetime-picker select {
+  cursor: pointer;
+}
+.react-datetime-picker button.react-datetime-picker__clear-button {
+  height: 100%;
+  padding: 1rem !important;
+  display: none;
+}
+.react-datetime-picker__inputGroup {
+  height: 100% !important;
+  max-width: 520px !important;
+  display: flex;
+  align-items: center;
+}
+
+.react-datetime-picker__calendar-button,
+.react-datetime-picker__clock,
+.react-datetime-picker__inputGroup__leadingZero {
+  display: none;
+}
+
+.react-datetime-picker__wrapper {
+  background: transparent;
+  height: 50px;
+  border: none !important;
+}
+.ql-editor {
+    min-height:300px;
+}
+ql-toolbar{
+    @apply bg-slate-50;
+}
+.quill{
+    background: #fff;
+    @apply shadow-sm;
+}
+.profile .form-group label {
+  font-weight: 500;
+}
