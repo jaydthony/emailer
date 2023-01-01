@@ -48,22 +48,49 @@ tfoot th {
 .form-group {
   @apply my-4 mb-12 flex flex-col gap-4;
 }
+.react-datetime-picker__inputGroup__divider,
+.react-datetime-picker__calendar-button.react-datetime-picker__button {
+  display: none;
+}
+.react-datetime-picker__inputGroup__input.react-datetime-picker__inputGroup__year {
+  margin-right: 0.7rem;
+}
+/* .react-datetime-picker__inputGroup .react-datetime-picker__inputGroup__divider:nth-of-type(3){
+  display: block;
+} */
+.react-datetime-picker__inputGroup__input.react-datetime-picker__inputGroup__hour::before{
+  content: ':';
+  font-weight: 700;
+}
+
 .react-datetime-picker button,
 .react-datetime-picker select,
 .react-datetime-picker div input {
+  @apply btn-ghost no-animation btn-square btn-sm btn rounded-none shadow-sm hover:bg-slate-50;
   width: initial !important;
-  min-width: 30px;
-  padding: 0.5em 1em !important;
-  margin: 0 0.4em;
+  /* min-width: 30px; */
+  /* padding: 0.5em 1em !important; */
+  margin: 0 0.05rem;
   border: 1px solid #fafafa;
   border-radius: 10px;
   background: #fff;
-  align-content: baseline;
   align-items: center;
-  @apply shadow-sm;
+}
+@media screen and (max-width: 520px) {
+  .react-datetime-picker button,
+  .react-datetime-picker select,
+  .react-datetime-picker div input {
+    font-size: 10px;
+  }
 }
 .react-datetime-picker select {
   cursor: pointer;
+}
+.react-calendar {
+  padding: 0.7rem;
+  border: 1px solid #fafafa !important; 
+  border-radius: 20px;
+  @apply shadow backdrop-blur-sm;
 }
 .react-datetime-picker button.react-datetime-picker__clear-button {
   height: 100%;
@@ -89,15 +116,27 @@ tfoot th {
   border: none !important;
 }
 .ql-editor {
-    min-height:300px;
+  min-height: 300px;
 }
-ql-toolbar{
-    @apply bg-slate-50;
+ql-toolbar {
+  @apply bg-slate-50;
 }
-.quill{
-    background: #fff;
-    @apply shadow-sm;
+.quill {
+  background: #fff;
+  @apply shadow-sm;
 }
 .profile .form-group label {
   font-weight: 500;
+}
+.tabs{
+  @apply gap-2;
+}
+.tab{
+  @apply shadow-sm bg-slate-100;
+}
+.tab-active{
+  @apply bg-slate-700 text-white rounded shadow-md;
+}
+.email-table tbody tr{
+  @apply hover:bg-slate-50 hover:text-slate-800;
 }

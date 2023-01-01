@@ -18,6 +18,7 @@
     "html-entities": "^2.3.3",
     "isemail": "^3.2.0",
     "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
     "mongoose": "^6.8.1",
     "node-cron": "^3.0.2",
     "node-email-validation": "^1.0.4",

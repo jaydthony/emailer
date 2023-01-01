@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import _, { isEmpty } from "underscore";
 import { User } from "../../sdk/User.sdk";
-import { alertMsg } from "../../helper/util";
 import { authToken, profileData } from "../../context";
 import { FiEye, FiEyeOff, FiAtSign, FiMail, FiUser } from "react-icons/fi";
 import Pop from "../../components/pop";
 import NoAuthHeader from "../../components/noAuthHeader";
+import Notiflix from "notiflix";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -62,7 +62,7 @@ function Register() {
           typeof response.data !== "Array" &&
           typeof response.data !== "String"
         ) {
-          alertMsg(response.data);
+          Notiflix.Notify.info(response.data);
         }
       }
     }

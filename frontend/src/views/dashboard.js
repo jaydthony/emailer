@@ -38,7 +38,7 @@ function Dashboard() {
         <FiMessageSquare />
         <span>Emails</span>
         <NavLink
-          to={"new"}
+          to={"email"}
           className="btn-gbost btn-sm btn ml-auto gap-2 rounded-full text-xs "
         >
           <span>Compose New</span> <FiEdit2 />

@@ -5,7 +5,7 @@ const emailModelSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  title: {
+  subject: {
     type: String,
     required: true,
   },
@@ -15,6 +15,14 @@ const emailModelSchema = new mongoose.Schema({
   },
   sender: {
     type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
+  schedule: {
+    type: Date,
     required: true,
   },
   createdAt: {

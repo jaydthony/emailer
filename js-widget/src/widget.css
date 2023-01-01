@@ -1,0 +1,69 @@
+.genez_flex,
+.genez-newsletter,
+.genez-newsletter form {
+    display: flex;
+
+}
+
+.genez-newsletter {
+    margin: 0 auto;
+    padding: 1rem;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 10px;
+    backdrop-filter: blur(1px);
+    max-width: 500px;
+
+}
+
+.genez_flex {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: center;
+}
+
+.genez-newsletter label {
+    font-size: 1.4rem;
+}
+
+.genez-newsletter form {
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    width: 100%;
+    flex-direction: column;
+}
+
+.genez-newsletter input,
+.genez-newsletter button {
+    border-radius: 10px;
+
+    border: 1px solid #f2f2f2;
+}
+
+.genez-newsletter form input {
+    padding: 1rem;
+    width: 100%;
+}
+
+.genez-newsletter form button {
+    padding: 1rem;
+    max-width: 250px;
+    font-size: 1rem;
+    color: #444;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.genez-newsletter form button:hover {
+    background-color: #444;
+    color: #fff;
+    transform: translateY(-3px);
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.genez-newsletter form button:active {
+    filter: brightness(90%);
+}

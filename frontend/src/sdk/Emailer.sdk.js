@@ -7,6 +7,10 @@ export class Emailer {
         return Emailer.remote.call("Emailer.getSubscribers")  
     }
     
+    static async process(data) {
+        return Emailer.remote.call("Emailer.process", data)  
+    }
+
     static async save(data) {
         return Emailer.remote.call("Emailer.save", data)  
     }
@@ -15,12 +19,16 @@ export class Emailer {
         return Emailer.remote.call("Emailer.getAll")  
     }
     
-    static async getOne(id) {
-        return Emailer.remote.call("Emailer.getOne", id)  
+    static async getOne(mailId) {
+        return Emailer.remote.call("Emailer.getOne", mailId)  
     }
 
-    static async send(data) {
-        return Emailer.remote.call("Emailer.send", data)  
+    static async update(mailId, data) {
+        return Emailer.remote.call("Emailer.update", mailId, data)  
+    }
+
+    static async send(mailId) {
+        return Emailer.remote.call("Emailer.send", mailId)  
     }
 
     static async getCount() {

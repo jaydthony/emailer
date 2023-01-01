@@ -1,18 +1,21 @@
-import {JWT_SECRET_KEY,MONGO_DB_URI,ABSTRACT_API_KEY,SMTP_PASSWORD,SMTP_USERNAME} from "./env.js"
-import mongoose from "mongoose";
-import {usersSchema} from "../models/user.js";
+import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+dotenv.config({
+  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"),
+});
+import { usersSchema } from "../models/user.js";
 import _ from "underscore";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
-import {encode as htmlentities} from "html-entities";
+import { encode as htmlentities } from "html-entities";
 import jwt from "jsonwebtoken";
+import { db } from "./helper.js";
 
 export class User {
   constructor() {
-    mongoose.connect(MONGO_DB_URI);
-    const db = mongoose.connection;
-    db.on("error", console.error.bind(console, "MongoDB connection error:"));
-    this.secret = JWT_SECRET_KEY;
+    db();
+    this.secret = process.env.JWT_SECRET_KEY;
   }
   /** Returns the user object
    * @param {string} value: email address
@@ -227,22 +230,3 @@ export class User {
     });
   }
 }
-/**
- * Test
- */
-// let loginData = {
-//   email: "aanu131@gmail.com",
-//   password: "Ola12345678",
-// };
-// //Ola12345678
-// let regData = {
-//   email: "aanu193371@gmail.com",
-//   password: "Ola12345678",
-//   firstName: "Gbenga",
-//   lastName: "Aanu",
-// };
-// let dd = new User();
-// (async () => {
-//   let u = await dd.create(regData);
-//   console.log(u);
-// })();

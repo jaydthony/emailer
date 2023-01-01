@@ -18,7 +18,7 @@ export function AddNew() {
       }}
       className="fixed bottom-8 right-8 hidden rounded-full bg-slate-700 p-4 text-5xl text-white lg:block"
     >
-      <NavLink to={"/new"}>
+      <NavLink to={"/email"}>
         <FiPlus />
       </NavLink>
     </motion.div>

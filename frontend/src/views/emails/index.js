@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import Table, { SelectColumnFilter } from "../../components/table";
 import { motion } from "framer-motion";
 import { Emailer } from "../../sdk/Emailer.sdk";
+import { useNavigate } from "react-router-dom";
+
+export async function emailLoader({ params }) {
+  return await Emailer.getOne(params.mailId);
+}
 
 function Emails() {
+  const navigate = useNavigate();
   const [emails, setEmails] = useState([]);
   useEffect(() => {
     async function getEmails() {
@@ -16,18 +22,14 @@ function Emails() {
   const columns = React.useMemo(
     () => [
       {
-        Header: "Title",
-        accessor: "title",
+        Header: "Subject",
+        accessor: "subject",
       },
       {
-        Header: "Sender",
-        accessor: "sender",
+        Header: "Status",
+        accessor: "status",
         Filter: SelectColumnFilter, // new
         filter: "includes",
-      },
-      {
-        Header: "Date",
-        accessor: "createdAt",
       },
     ],
     []
@@ -39,9 +41,18 @@ function Emails() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="row"
+        className="row email-table"
       >
-        <Table columns={columns} data={emails} />
+        <Table
+          columns={columns}
+          data={emails}
+          rowProps={(row) => ({
+            onClick: () => navigate(`edit/${row.original.mailId}`),
+            style: {
+              cursor: "pointer",
+            },
+          })}
+        />
       </motion.div>
     </>
   );

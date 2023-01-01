@@ -6,11 +6,12 @@ import App from "./App";
 import { ErrorPage } from "./components";
 import { Login, Register } from "./views/auth";
 import Profile from "./views/profile";
-import Subscribers from "./views/subscribers";
+import Subscribers, { Unsubscribe } from "./views/subscribers";
 import Dashboard from "./views/dashboard";
-import { NewEmail } from "./views/emails";
+import { emailLoader, NewEmail } from "./views/emails";
 import * as fetchIntercept from "fetch-intercept";
 import Logout from "./components/logout";
+import EditEmail from "./views/emails/edit";
 
 // (function () {
 //   fetchIntercept.register({
@@ -32,8 +33,14 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "new",
+        path: "email",
         element: <NewEmail />,
+      },
+      {
+        path: "edit/:mailId",
+        element: <EditEmail />,
+        loader: emailLoader,
+        errorElement: <ErrorPage />,
       },
       {
         path: "profile",
@@ -45,13 +52,17 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { 
-    path: "/login",
+  {
+    path: "login",
     element: <Login />,
   },
   {
-    path: "/register",
+    path: "register",
     element: <Register />,
+  },
+  {
+    path: "unsubscribe",
+    element: <Unsubscribe />,
   },
   {
     path: "/logout",

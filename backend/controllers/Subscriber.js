@@ -1,29 +1,32 @@
-import {JWT_SECRET_KEY,MONGO_DB_URI,ABSTRACT_API_KEY,SMTP_PASSWORD,SMTP_USERNAME} from "./env.js"
-import mongoose from "mongoose"
-import {subscriberSchema} from "./../models/subscriber.js"
-import validator from "deep-email-validator"
-import _ from "underscore";
-import axios from "axios"
-
+import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+dotenv.config({
+  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"),
+});
+import { subscriberSchema } from "./../models/subscriber.js";
+import validator from "deep-email-validator";
+import _, { isEmpty } from "underscore";
+import axios from "axios";
+import { db } from "./helper.js";
 
 export class Subscriber {
   constructor() {
-    mongoose.connect(MONGO_DB_URI);
-    const db = mongoose.connection;
-    db.on("error", console.error.bind(console, "MongoDB connection error:"));
-    this.ABSTRACT_API_KEY = ABSTRACT_API_KEY;
-    this.simpleValidation = false;
+    db();
+    this.ABSTRACT_API_KEY = process.env.ABSTRACT_API_KEY;
+    this.simpleValidation = process.env.USE_SIMPLE_VALIDATION;
+    console.log(this.simpleValidation);
   }
-  async validate(address) {
-    if (this.simpleValidation) {
-      return validator.is_email_valid(address);
+  async validate(email) {
+    if (this.simpleValidation==true) {
+      return validator.is_email_valid(email);
     } else {
       const valid = await axios
         .get(
           "https://emailvalidation.abstractapi.com/v1/?api_key=" +
             this.ABSTRACT_API_KEY +
             "&email=" +
-            address
+            email
         )
         .then((response) => {
           return response.data;
@@ -41,44 +44,60 @@ export class Subscriber {
       }
     }
   }
-  async addSubscription(address) {
+
+  async addSubscription(req) {
     /**
-     * Validate email address
+     * Validate email
      */
-    let valid = await this.validate(address);
+    let email = this.getParam(req, "email");
+    if (isEmpty(email)) {
+      return this.httpResponse("Email not found");
+    }
+    let valid = await this.validate(email);
     if (valid == true) {
       let data = {
-        email: address,
+        email: email,
         pauseSubscription: false,
         confirmed: false,
       };
-      let exist = await subscriberSchema.findOne({ email: address });
+      let exist = await subscriberSchema.findOne({ email });
       if (_.isEmpty(exist)) {
         this.subscriber = new subscriberSchema(data);
         let savedData = await this.subscriber.save();
         if (savedData._id !== undefined) {
-          return { savedData };
+          return this.httpResponse(savedData);
         } else {
-          return { error: "unable_to_save_email" };
+          return this.httpResponse("Unable to save email");
         }
       } else {
-        return { error: "email_exists" };
+        return this.httpResponse("Email exists");
       }
     } else {
-      return { error: "invalid_email" };
+      return this.httpResponse("Invalid email");
     }
   }
-  async confirmSubscription(address) {
-    return await subscriberSchema.findOneAndUpdate(
-      { email: address },
-      { confirmed: true },
-      { new: true }
-    );
-  }
-  async unsubscribe(address) {
-    return await subscriberSchema.findOneAndDelete({ email: address });
+
+  async unsubscribe(email) {
+    return await subscriberSchema.findOneAndDelete({ email });
   }
   async getSubscribers() {
     return await subscriberSchema.find();
+  }
+  httpResponse(body) {
+    return {
+      body: JSON.stringify({ data: body }),
+      bodyEncoding: "text",
+      headers: { contentType: "application/json" },
+      statusCode: "201",
+      statusDescription: "Ok",
+    };
+  }
+  getParam(req, elem) {
+    let body = JSON.parse(req.body);
+    if (body[elem] !== undefined) {
+      return body[elem];
+    } else {
+      return null;
+    }
   }
 }

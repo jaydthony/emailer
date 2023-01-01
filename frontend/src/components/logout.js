@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authToken, profileData } from "../context";
+import Notiflix from "notiflix";
 
 function Logout() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function Logout() {
   useEffect(() => {
     setProfile({});
     setToken("");
+    Notiflix.Notify.success("Logged out");
     navigate("/login");
   }, []);
   return <></>;

@@ -1,31 +1,30 @@
-import {
-  JWT_SECRET_KEY,
-  MONGO_DB_URI,
-  ABSTRACT_API_KEY,
-  SMTP_PASSWORD,
-  SMTP_USERNAME,
-} from "./env.js";
 import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+dotenv.config({
+  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"),
+});
 import fs from "fs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
-import _ from "underscore";
+import _, { each, isEmpty, isObject } from "underscore";
 import handlebars from "handlebars";
 import { subscriberSchema } from "../models/subscriber.js";
 import { emailSchema } from "../models/email.js";
-import { fileURLToPath } from "url";
 import { db } from "./helper.js";
 /**
  * Emailer class
  */
 export class Emailer {
   constructor() {
-    db(MONGO_DB_URI);
+    db();
     const __filename = fileURLToPath(import.meta.url);
     this.dirname = path.dirname(__filename);
-    // mongoose.connect(MONGO_DB_URI);
-    // const db = mongoose.connection;
-    // db.on("error", console.error.bind(console, "MongoDB connection error:"));
+    this.unsubscribelink = process.env.UNSUBSCRIBE_URL;
+    this.sitename = process.env.SITE_NAME;
+    this.SMTP_USERNAME = process.env.SMTP_USERNAME;
+    this.SERVICE = process.env.SERVICE;
+    this.SMTP_PASSWORD = process.env.SMTP_PASSWORD;
   }
 
   async getSubscribers() {
@@ -41,91 +40,130 @@ export class Emailer {
   /**
    *
    * @param {Object} data
-   * - objects holds title, message, sender
+   * - objects holds subject, message, sender
    * @returns
    */
+  async process(data) {
+    let { subject, sender, body, schedule, status } = data;
+
+    each(data, function (elem) {
+      if (isEmpty(data.elem)) {
+        return `${data.elem} cannot be empty`;
+      }
+    });
+    /**
+     * Save data first
+     */
+    let saved = await this.save({ subject, sender, body, status, schedule });
+    if (status == "immediate") {
+      if (isObject(saved) && "_id" in saved) {
+        let sent = await this.send(saved.mailId);
+        return await this.getOne(saved.mailId);
+      } else {
+        return { error: "Unable to save email" };
+      }
+    } else {
+      return saved;
+    }
+  }
   async save(data) {
-    data.mailId = await this.generateId();
-    let mail = new emailSchema(data);
+    let mailId = await this.generateId();
+    const { subject, sender, body, status, schedule } = data;
+    let savedata = {
+      mailId,
+      subject: subject,
+      sender,
+      status,
+      message: body,
+      schedule,
+    };
+    let mail = new emailSchema(savedata);
     return await mail.save();
   }
   async getAll() {
     return await emailSchema.find();
   }
-  async getOne(id) {
-    return await emailSchema.find({ mailId: id });
+  async getOne(mailId) {
+    return await emailSchema.findOne({ mailId });
+  }
+  async update(mailId, data) {
+    let updated = await emailSchema.findOneAndUpdate({ mailId }, data, {
+      new: true,
+    });
+    if (updated) {
+      return this.process(updated);
+    } else {
+      return updated;
+    }
   }
   /**
    * Accepts- (string) sender, receiver, subject, html
    */
-  async send(data) {
-    const { subject, sender, body, sitename, unsubscribelink } = data;
-    /**
-     * Save data first
-     */
-    let savedata = {
-      title: subject,
-      sender,
-      message: body,
-    };
-    let saved = await this.save(savedata);
-    try {
-      let transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          user: SMTP_USERNAME,
-          pass: SMTP_PASSWORD,
-        },
-        pool: true,
-      });
-      /**
-       * Handle html teplating
-       * Replacement variables include: title, preview,logourl,heading,body,sitename,unsubscribelink,supportlink,supportemail
-       */
-      const replacements = {
-        title: subject,
-        preview: subject,
-        body,
-        sitename,
-        unsubscribelink,
-      };
-      let htmltosend = this.parseHtml(replacements);
-      let list = await this.getSubscribers();
-      let promises = [];
-      list.forEach((email) => {
-        promises.push(
-          new Promise((resolve, reject) => {
-            transporter.sendMail(
-              {
-                from: sender, // sender address
-                to: email, // list of receivers
-                subject: subject, // Subject line
-                html: htmltosend, // html body
-              },
-              (err, response) => {
-                if (err) {
-                  console.log(err);
-                  reject(err);
-                } else {
-                  // console.log("success", JSON.stringify(response));
-                  resolve(response);
-                }
-              }
-            );
-          })
-        );
-      });
-
-      return await Promise.all(promises)
-        .then((result) => {
-          transporter.close();
-          return result
-        })
-        .catch((error) => {
-          console.log(error);
+  async send(mailId) {
+    // get email id and send
+    let email = await this.getOne(mailId);
+    if (!isEmpty(email)) {
+      const { subject, message, sender } = email;
+      // let saved = await this.save(savedata);
+      try {
+        let transporter = nodemailer.createTransport({
+          service: this.SERVICE,
+          auth: {
+            user: this.SMTP_USERNAME,
+            pass: this.SMTP_PASSWORD,
+          },
+          pool: true,
         });
-    } catch (error) {
-      console.log(error);
+        /**
+         * Handle html teplating
+         * Replacement variables include: subject, preview,logourl,heading,body,sitename,unsubscribelink,supportlink,supportemail
+         */
+        const replacements = {
+          subject: subject,
+          preview: subject,
+          body: message,
+          sitename: this.sitename,
+          unsubscribelink: this.unsubscribelink,
+        };
+        let htmltosend = this.parseHtml(replacements);
+        let list = await this.getSubscribers();
+        let promises = [];
+        list.forEach((email) => {
+          promises.push(
+            new Promise((resolve, reject) => {
+              transporter.sendMail(
+                {
+                  from: sender, // sender address
+                  to: email, // list of receivers
+                  subject: subject, // Subject line
+                  html: htmltosend, // html body
+                },
+                (err, response) => {
+                  if (err) {
+                    console.log(err);
+                    reject(err);
+                  } else {
+                    resolve(response);
+                  }
+                }
+              );
+            })
+          );
+        });
+
+        return await Promise.all(promises)
+          .then(async (result) => {
+            // update email status to sent
+            transporter.close();
+            let sent = await this.update(mailId, { status: "sent" });
+            return result;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
   async getCount() {
@@ -158,21 +196,3 @@ export class Emailer {
     return handler(replacements);
   }
 }
-// new Emailer();
-
-/**
- * @ Send email
- * Accepts: title, body
- */
-// (async () => {
-//   let email = new Emailer();
-//   let info = {
-//     subject: "Welcome to 2023 New Year",
-//     sender: "mark@gmail.com",
-//     body: "A beautiful year ahead of us",
-//     sitename: "Emailer",
-//     unsubscribelink: "https://sitebaseurl.com/unsubscribe",
-//   };
-
-//   console.log(await email.send(info));
-// })();
