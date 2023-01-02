@@ -25,4 +25,4 @@ This is an embeddable form that can be deployed on any website.
 - To see the embeddable widget in action navigate to the *js-widget/demo/index.html*, change the url (http://127.0.0.1:8083/Subscriber/addSubscription) parameter to the link you copied earlier
  `mw('init', { url: 'http://127.0.0.1:8083/Subscriber/addSubscription' });`
 - Open the index.html to test.
-- Before sharing the widget, endure to change the line */dist/widget.js* to the link of your cdn
+- Before sharing the widget, ensure to change the line */dist/widget.js* to the link of your cdn
