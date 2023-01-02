@@ -1,9 +1,5 @@
-import path from "path";
 import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-dotenv.config({
-  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"),
-});
+dotenv.config();
 import { usersSchema } from "../models/user.js";
 import _ from "underscore";
 import crypto from "crypto";

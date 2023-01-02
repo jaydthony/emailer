@@ -1,9 +1,5 @@
-import path from "path";
 import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-dotenv.config({
-  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"),
-});
+dotenv.config();
 import _ from "underscore";
 import { db } from "./helper.js";
 import { emailSchema } from "../models/email.js";
@@ -24,10 +20,7 @@ export class Cron {
       if (diff < 20) {
         emailer.send(elem.mailId);
         console.log("sent");
-      } else {
-        console.log(diff);
       }
     });
-    console.log('Cron running');
   }
 }

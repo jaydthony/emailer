@@ -1,9 +1,7 @@
 import path from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-dotenv.config({
-  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"),
-});
+dotenv.config();
 import fs from "fs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";

@@ -1,9 +1,5 @@
-import path from "path";
 import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-dotenv.config({
-  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env"),
-});
+dotenv.config();
 import { subscriberSchema } from "./../models/subscriber.js";
 import validator from "deep-email-validator";
 import _, { isEmpty } from "underscore";
@@ -15,7 +11,6 @@ export class Subscriber {
     db();
     this.ABSTRACT_API_KEY = process.env.ABSTRACT_API_KEY;
     this.simpleValidation = process.env.USE_SIMPLE_VALIDATION;
-    console.log(this.simpleValidation);
   }
   async validate(email) {
     if (this.simpleValidation==true) {
