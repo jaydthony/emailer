@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import {} from "dotenv/config";
 import _ from "underscore";
 import { db } from "./helper.js";
 import { emailSchema } from "../models/email.js";

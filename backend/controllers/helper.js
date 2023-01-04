@@ -1,7 +1,6 @@
+import {} from "dotenv/config";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import { isEmpty } from "underscore";
-dotenv.config();
 
 
 export function db() {

@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import {} from "dotenv/config";
 import { subscriberSchema } from "./../models/subscriber.js";
 import validator from "deep-email-validator";
 import _, { isEmpty } from "underscore";

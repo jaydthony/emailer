@@ -1,7 +1,6 @@
+import {} from "dotenv/config";
 import path from "path";
-import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-dotenv.config();
 import fs from "fs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
