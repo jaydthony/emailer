@@ -1,4 +1,5 @@
 import {} from "dotenv/config";
+import mongoose from "mongoose";
 import _ from "underscore";
 import { db } from "./helper.js";
 import { emailSchema } from "../models/email.js";

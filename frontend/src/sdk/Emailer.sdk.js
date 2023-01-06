@@ -3,6 +3,10 @@ import { Remote } from "./remote.js"
 export class Emailer {
     static remote = new Remote("http://127.0.0.1:8083/Emailer")
 
+    static async init() {
+        return Emailer.remote.call("Emailer.init")  
+    }
+    
     static async getSubscribers() {
         return Emailer.remote.call("Emailer.getSubscribers")  
     }
@@ -39,8 +43,12 @@ export class Emailer {
         return Emailer.remote.call("Emailer.generateId")  
     }
     
-    static async parseHtml(replacements, ) {
-        return Emailer.remote.call("Emailer.parseHtml", replacements, )  
+    static async getTemplate() {
+        return Emailer.remote.call("Emailer.getTemplate")  
+    }
+    
+    static async parseHtml(replacements, source) {
+        return Emailer.remote.call("Emailer.parseHtml", replacements, source)  
     }
 
     

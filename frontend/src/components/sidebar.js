@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FiHome, FiLogOut, FiUser, FiUserCheck } from "react-icons/fi";
+import {
+  FiHome,
+  FiLogOut,
+  FiSettings,
+  FiUser,
+  FiUserCheck,
+} from "react-icons/fi";
 import { isEmpty } from "underscore";
 import { MenuLink, BareLink } from ".";
 import { profileData } from "../context";
@@ -51,6 +57,12 @@ function Sidebar() {
             icon={<FiUser />}
             to={"profile"}
             title={`Profile`}
+            newClass={""}
+          />
+          <MenuLink
+            icon={<FiSettings />}
+            to={"settings"}
+            title={`Settings`}
             newClass={""}
           />
           <MenuLink

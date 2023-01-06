@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { User } from "../../sdk/User.sdk";
 import { FiEye, FiEyeOff, FiAtSign } from "react-icons/fi";
@@ -8,6 +8,7 @@ import Notiflix from "notiflix";
 
 function Login() {
   const navigate = useNavigate();
+  const [pending, startTransition] = useTransition();
   const [profile, setProfile] = profileData((state) => [
     state.data,
     state.setData,
@@ -18,20 +19,22 @@ function Login() {
   const [password, setPassword] = useState("");
   const login = async (e) => {
     e.preventDefault();
-    let response = await User.login({
-      email,
-      password,
+    startTransition(async () => {
+      let response = await User.login({
+        email,
+        password,
+      });
+      if (response.status == true) {
+        setToken(response.jwt);
+        setProfile(response.data);
+        Notiflix.Notify.success("Logged In");
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
+      } else {
+        Notiflix.Notify.info(response.data);
+      }
     });
-    if (response.status == true) {
-      setToken(response.jwt);
-      setProfile(response.data);
-      Notiflix.Notify.success('Logged In');
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
-    } else {
-      Notiflix.Notify.info(response.data);
-    }
   };
 
   return (
@@ -91,7 +94,9 @@ function Login() {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="btn-ghost btn mr-3 inline-block rounded-lg bg-slate-800 px-5 py-3 text-sm font-medium text-white"
+              className={`${
+                pending ? "loading" : ""
+              }btn-ghost btn mr-3 inline-block rounded-lg bg-slate-800 px-5 py-3 text-sm font-medium text-white`}
               onClick={(e) => login(e)}
             >
               Sign in

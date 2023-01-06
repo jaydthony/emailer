@@ -1,7 +1,6 @@
 import {} from "dotenv/config";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import _, { each, isEmpty, isObject } from "underscore";
@@ -9,21 +8,39 @@ import handlebars from "handlebars";
 import { subscriberSchema } from "../models/subscriber.js";
 import { emailSchema } from "../models/email.js";
 import { db } from "./helper.js";
+import axios from "axios";
+import { settingsSchema } from "../models/settings.js";
 /**
  * Emailer class
  */
 export class Emailer {
+  SMTP_PASSWORD;
+  SMTP_USERNAME;
+  emailTemplateUrl;
   constructor() {
     db();
-    const __filename = fileURLToPath(import.meta.url);
-    this.dirname = path.dirname(__filename);
-    this.unsubscribelink = process.env.UNSUBSCRIBE_URL;
-    this.sitename = process.env.SITE_NAME;
-    this.SMTP_USERNAME = process.env.SMTP_USERNAME;
-    this.SERVICE = process.env.SERVICE;
-    this.SMTP_PASSWORD = process.env.SMTP_PASSWORD;
+    this.init();
   }
-
+  async init() {
+    let resp = await settingsSchema.find();
+    if (isEmpty(resp)) {
+      return { error: "No settings found" };
+    }
+    let {
+      emailTemplateUrl,
+      serviceProvider,
+      smtpPassword,
+      smtpUsername,
+      siteUrl,
+      siteName,
+    } = resp[0];
+    this.SMTP_PASSWORD = smtpPassword;
+    this.SMTP_USERNAME = smtpUsername;
+    this.emailTemplateUrl = emailTemplateUrl;
+    this.SERVICE = serviceProvider;
+    this.sitename = siteName;
+    this.unsubscribelink = siteUrl;
+  }
   async getSubscribers() {
     let all_subscribers = await subscriberSchema.find().select("email");
     let arr = [];
@@ -42,7 +59,9 @@ export class Emailer {
    */
   async process(data) {
     let { subject, sender, body, schedule, status } = data;
-
+    /**
+     * Get template
+     */
     each(data, function (elem) {
       if (isEmpty(data.elem)) {
         return `${data.elem} cannot be empty`;
@@ -98,6 +117,14 @@ export class Emailer {
    */
   async send(mailId) {
     // get email id and send
+    if (
+      isEmpty(this.SERVICE) ||
+      isEmpty(this.SMTP_PASSWORD) ||
+      isEmpty(this.SMTP_USERNAME) ||
+      isEmpty(this.emailTemplateUrl)
+    ) {
+      await this.init();
+    }
     let email = await this.getOne(mailId);
     if (!isEmpty(email)) {
       const { subject, message, sender } = email;
@@ -115,17 +142,19 @@ export class Emailer {
          * Handle html teplating
          * Replacement variables include: subject, preview,logourl,heading,body,sitename,unsubscribelink,supportlink,supportemail
          */
-        const replacements = {
-          subject: subject,
-          preview: subject,
-          body: message,
-          sitename: this.sitename,
-          unsubscribelink: this.unsubscribelink,
-        };
-        let htmltosend = this.parseHtml(replacements);
+
         let list = await this.getSubscribers();
         let promises = [];
+        let template = await this.getTemplate();
         list.forEach((email) => {
+          const replacements = {
+            subject: subject,
+            preview: subject,
+            body: message,
+            sitename: this.sitename,
+            unsubscribelink: `${this.unsubscribelink}/unsubscribe/email=${email}`,
+          };
+          let htmltosend = this.parseHtml(replacements, template);
           promises.push(
             new Promise((resolve, reject) => {
               transporter.sendMail(
@@ -186,10 +215,22 @@ export class Emailer {
    * @param {String} template
    * @returns String
    */
-  parseHtml(replacements, template = "default") {
-    const filePath = path.join(this.dirname, `../${template}.html`);
-    const source = fs.readFileSync(filePath, "utf-8").toString();
+  async getTemplate() {
+    return await axios
+      .get(this.emailTemplateUrl)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  parseHtml(replacements, source) {
     const handler = handlebars.compile(source);
     return handler(replacements);
   }
 }
+(async () => {
+  let email = new Emailer();
+  email.send("95ebf37a023d8ab1");
+})();

@@ -33,4 +33,18 @@ const profileData = create(
     }
   )
 );
-export { profileData, authToken, siteInfo };
+const settingsData = create(
+  persist(
+    (set) => ({
+      data: {},
+      setData: (data) =>
+        set((state) => ({
+          data,
+        })),
+    }),
+    {
+      name: "profileData", // unique name
+    }
+  )
+);
+export { profileData, authToken, siteInfo ,settingsData};

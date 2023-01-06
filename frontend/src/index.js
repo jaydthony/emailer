@@ -9,18 +9,9 @@ import Profile from "./views/profile";
 import Subscribers, { Unsubscribe } from "./views/subscribers";
 import Dashboard from "./views/dashboard";
 import { emailLoader, NewEmail } from "./views/emails";
-import * as fetchIntercept from "fetch-intercept";
 import Logout from "./components/logout";
 import EditEmail from "./views/emails/edit";
-
-// (function () {
-//   fetchIntercept.register({
-//     request: function (url, config) {
-//       config.headers.jwt = localStorage.getItem("jwt");
-//       return [url, config];
-//     },
-//   });
-// })();
+import Setting from "./views/settings";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "subscribers",
         element: <Subscribers />,
+      },
+      {
+        path: "settings",
+        element: <Setting />,
       },
     ],
   },

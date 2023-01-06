@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import _, { isEmpty } from "underscore";
 import { User } from "../../sdk/User.sdk";
@@ -9,6 +9,7 @@ import NoAuthHeader from "../../components/noAuthHeader";
 import Notiflix from "notiflix";
 
 function Register() {
+  const [pending, startTransition] = useTransition();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -39,33 +40,35 @@ function Register() {
   };
   const signup = async (e) => {
     e.preventDefault();
-    checkFields();
-    if (isEmpty(err)) {
-      let response = await User.create({
-        email,
-        firstName,
-        lastName,
-        password,
-      });
-      if (response.status == true) {
-        setToken(response.jwt);
-        setProfile(response.data);
-        navigate("/");
-      } else {
-        if (typeof response.data == "String") {
-          setErr(response.data);
-        }
-        if (typeof response.data == "Array") {
-          setErr(response.data.join(","));
-        }
-        if (
-          typeof response.data !== "Array" &&
-          typeof response.data !== "String"
-        ) {
-          Notiflix.Notify.info(response.data);
+    startTransition(async () => {
+      checkFields();
+      if (isEmpty(err)) {
+        let response = await User.create({
+          email,
+          firstName,
+          lastName,
+          password,
+        });
+        if (response.status == true) {
+          setToken(response.jwt);
+          setProfile(response.data);
+          navigate("/");
+        } else {
+          if (typeof response.data == "String") {
+            setErr(response.data);
+          }
+          if (typeof response.data == "Array") {
+            setErr(response.data.join(","));
+          }
+          if (
+            typeof response.data !== "Array" &&
+            typeof response.data !== "String"
+          ) {
+            Notiflix.Notify.info(response.data);
+          }
         }
       }
-    }
+    });
   };
   return (
     <>
@@ -191,7 +194,9 @@ function Register() {
           <div className="flex items-center justify-between">
             <button
               type="submit"
-              className="btn-ghost btn mr-3 inline-block rounded-lg bg-slate-800 px-5 py-3 text-sm font-medium text-white"
+              className={`${
+                pending ? "loading" : ""
+              }btn-ghost btn mr-3 inline-block rounded-lg bg-slate-800 px-5 py-3 text-sm font-medium text-white`}
             >
               Sign Up
             </button>

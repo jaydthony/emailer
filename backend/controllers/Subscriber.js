@@ -4,15 +4,24 @@ import validator from "deep-email-validator";
 import _, { isEmpty } from "underscore";
 import axios from "axios";
 import { db } from "./helper.js";
+import { settingsSchema } from "../models/settings.js";
 
 export class Subscriber {
   constructor() {
     db();
     this.ABSTRACT_API_KEY = process.env.ABSTRACT_API_KEY;
-    this.simpleValidation = process.env.USE_SIMPLE_VALIDATION;
+    this.simpleValidation = false;
   }
   async validate(email) {
-    if (this.simpleValidation==true) {
+    let settings = await settingsSchema.find();
+    if (
+      !isEmpty(settings) &&
+      settings[0] !== undefined &&
+      "useAbstract" in settings[0]
+    ) {
+      this.simpleValidation = settings[0]["useAbstract"];
+    }
+    if (this.simpleValidation == true) {
       return validator.is_email_valid(email);
     } else {
       const valid = await axios
