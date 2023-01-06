@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ReactQuill from "react-quill";
-import { useLoaderData } from "react-router-dom";
 import { motion } from "framer-motion";
 import "react-quill/dist/quill.snow.css";
 import DateTimePicker from "react-datetime-picker";
-import { profileData, siteInfo } from "../../context";
+import { profileData } from "../../context";
 import { Emailer } from "../../sdk/Emailer.sdk";
-import { isArray, isEmpty, isObject } from "underscore";
+import { isEmpty, isObject } from "underscore";
 import moment from "moment";
-import * as timezone from 'moment-timezone'
+import * as timezone from "moment-timezone";
 import Notiflix from "notiflix";
 
 function NewEmail() {
-  const data = useLoaderData();
-  const [websiteInfo] = siteInfo((state) => [state.info]);
   const [editorState, setEditorState] = React.useState("");
   const [isPending, setIsPending] = React.useState(false);
   const [timezone, setTimezone] = React.useState("");
@@ -22,6 +19,7 @@ function NewEmail() {
   const [user] = profileData((state) => [state.data]);
   const [utcTime, setUtc] = React.useState("");
   const [iso, setIso] = React.useState("");
+  const [err, setErr] = React.useState("");
   const [status, setStatus] = React.useState("draft");
   const modules = {
     toolbar: [
@@ -41,7 +39,8 @@ function NewEmail() {
     setTimezone(moment.tz.guess());
     setIso(moment(date).utc().toISOString());
   }, [date]);
-  const sendEmail = () => {
+  const sendEmail = async () => {
+    setErr("");
     setIsPending(true);
     if (isEmpty(subject) || isEmpty(editorState)) {
       Notiflix.Notify.warning("Please fill up subject and message body");
@@ -55,17 +54,22 @@ function NewEmail() {
       schedule: iso,
       status,
     };
-    (async function () {
-      let response = await Emailer.process(data);
-      if (isObject(response)) {
-        Notiflix.Notify.success("Email saved");
-      }
-      setIsPending(false);
-    })();
+    let response = await Emailer.process(data);
+    if (isObject(response)) {
+      Notiflix.Notify.success("Email sent");
+    } else {
+      Notiflix.Notify.info(response);
+    }
+    setIsPending(false);
   };
 
   return (
     <>
+      {err && (
+        <>
+          <span className="text-error">{err}</span>
+        </>
+      )}
       <div className="form-group">
         <label htmlFor="title" className="text-lg font-semibold">
           Enter email subject

@@ -13,6 +13,8 @@ classes:
         type: http
   - path: ./controllers/User.js
     type: jsonrpc
+  - path: ./controllers/Settings.js
+    type: jsonrpc
   - path: ./controllers/Cron.js
     type: jsonrpc
     methods:

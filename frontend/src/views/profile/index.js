@@ -3,17 +3,14 @@ import { FiUserCheck } from "react-icons/fi";
 import { profileData } from "../../context";
 
 function Profile() {
-  const [profile, setProfile] = profileData((state) => [
-    state.data,
-    state.setData,
-  ]);
+  const [profile] = profileData((state) => [state.data]);
   const { firstName, lastName, email } = profile;
   return (
     <>
-      <h1 className="text-3xl flex font-semibold mb-4 gap-2">
+      <h1 className="mb-4 flex gap-2 text-3xl font-semibold">
         <FiUserCheck /> Profile
       </h1>
-      <div className="bg-white rounded-lg shadow p-4 profile">
+      <div className="profile rounded-lg bg-white p-4 shadow">
         <div className="form-group">
           <label htmlFor="">First Name</label>
           <span>{firstName}</span>

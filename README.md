@@ -2,7 +2,7 @@
 
 ### Project overview
 
-This project allows authenticated users to send email messages to a list of subscribers.
+This project allows authenticated users to send email messages to a list of subscribers. 
 
 ### What you need to get started
 
@@ -16,7 +16,7 @@ This project allows authenticated users to send email messages to a list of subs
 - Check the _env_sample_ and ensure to fill all the fields before running the app
 - In the _frontend_ and the backend folder, run _npm install_ to install the dependencies
 - Navigate to the backend folder and run _genezio local_ to start
-- Copy the http link to the unsubscribe endpoint, and save it for the next section.
+- Copy the http link to the Subscribe Endpoint, and save it for the next section.
 - Navigate to the frontend folder and run _npm start_ to initialize the frontend of the app
 - You should see a login page.
 - Create an account/Login to your existing account. Navigate to the settings page to save the required information necessary for the app to run.
@@ -32,7 +32,7 @@ This project allows authenticated users to send email messages to a list of subs
 
 #### Email validation
 
-- ABSTRACT_API_KEY = Api key from abstract[Get Started](https://www.abstractapi.com/api/email-verification-validation-api)
+- ABSTRACT_API_KEY = Api key from abstract [Get started here](https://www.abstractapi.com/api/email-verification-validation-api)
 
 #### JWT
 
@@ -45,7 +45,7 @@ This is an embeddable form that can be deployed on any website.
 - In the js-widget folder, run _npm install_ to install all dependencies
 - Run _npm build_ to generate the _widget.js_ file. It will be saved in /js-widget/dist/
 - You can upload the widget.js file in the to any cdn of your choice.
-- To see the embeddable widget in action navigate to the _js-widget/demo/index.html_, change the url (http://127.0.0.1:8083/Subscriber/addSubscription) parameter to the link you copied earlier
-  `mw('init', { url: 'http://127.0.0.1:8083/Subscriber/addSubscription' });`
+- To see the embeddable widget in action navigate to the _js-widget/demo/index.html_, *change the url* (http://127.0.0.1:8083/Subscriber/addSubscription) parameter to the link you copied earlier
+  `mw('init', { url: 'CHANGE_TO_YOUR_URL' });`
 - Open the index.html to test.
-- Before sharing thte widget, endure to change the line _/dist/widget.js_ to the link of your cdn
+- Before sharing the widget, endure to change the line _/dist/widget.js_ to the link of your cdns

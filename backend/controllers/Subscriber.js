@@ -1,6 +1,6 @@
 import {} from "dotenv/config";
+import * as EmailValidator from 'email-validator';
 import { subscriberSchema } from "./../models/subscriber.js";
-import validator from "deep-email-validator";
 import _, { isEmpty } from "underscore";
 import axios from "axios";
 import { db } from "./helper.js";
@@ -10,7 +10,7 @@ export class Subscriber {
   constructor() {
     db();
     this.ABSTRACT_API_KEY = process.env.ABSTRACT_API_KEY;
-    this.simpleValidation = false;
+    this.useAbstractValidation = false;
   }
   async validate(email) {
     let settings = await settingsSchema.find();
@@ -19,10 +19,10 @@ export class Subscriber {
       settings[0] !== undefined &&
       "useAbstract" in settings[0]
     ) {
-      this.simpleValidation = settings[0]["useAbstract"];
+      this.useAbstractValidation = settings[0]["useAbstract"];
     }
-    if (this.simpleValidation == true) {
-      return validator.is_email_valid(email);
+    if (this.useAbstractValidation == true) {
+      return EmailValidator.validate(email);
     } else {
       const valid = await axios
         .get(
@@ -82,7 +82,7 @@ export class Subscriber {
 
   async unsubscribe(email) {
     return await subscriberSchema.findOneAndDelete({ email });
-  }
+  } 
   async getSubscribers() {
     return await subscriberSchema.find();
   }

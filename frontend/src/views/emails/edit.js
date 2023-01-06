@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ReactQuill from "react-quill";
 import { motion } from "framer-motion";
 import "react-quill/dist/quill.snow.css";
 import DateTimePicker from "react-datetime-picker";
-import { profileData, siteInfo } from "../../context";
+import { profileData } from "../../context";
 import { Emailer } from "../../sdk/Emailer.sdk";
-import { isArray, isEmpty, isNull, isObject } from "underscore";
+import { isEmpty, isObject } from "underscore";
 import moment from "moment";
 import * as timezone from "moment-timezone";
-import { NavLink, useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { FiArrowLeftCircle } from "react-icons/fi";
 import Notiflix from "notiflix";
 
@@ -42,7 +42,6 @@ function EditEmail() {
     ],
   };
   //
-
   useEffect(() => {
     if (!isEmpty(data)) {
       setMailId(data.mailId);
@@ -51,12 +50,9 @@ function EditEmail() {
       setEditorState(data.message);
       setStatus(data.status);
       setIsEditable(data.status == "sent" ? false : true);
-      setDate(moment(data.schedule).toDate())
+      setDate(moment(data.schedule).toDate());
     }
   }, [data]);
-  useEffect(() => {
-    // console.log(date,moment(data.schedule).toDate());
-  }, [date,data]);
   //
   useEffect(() => {
     setUtc(moment(date).utc().toString());
@@ -64,7 +60,7 @@ function EditEmail() {
     setIso(moment(date).utc().toISOString());
   }, [date]);
   //
-  const sendEmail = () => {
+  const sendEmail = async () => {
     setIsPending(true);
     if (isEmpty(subject) || isEmpty(editorState)) {
       Notiflix.Notify.info("Please fill up subject and message body");
@@ -78,13 +74,11 @@ function EditEmail() {
       schedule: iso,
       status,
     };
-    (async function () {
-      let response = await Emailer.update(mailId, data);
-      setIsPending(false);
-      if (isObject(response)) {
-        Notiflix.Notify.success("Email saved");
-      }
-    })();
+    let response = await Emailer.update(mailId, data);
+    setIsPending(false);
+    if (isObject(response)) {
+      Notiflix.Notify.success("Email saved");
+    }
   };
   const navigate = useNavigate();
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { User } from "../../sdk/User.sdk";
 import { FiEye, FiEyeOff, FiAtSign } from "react-icons/fi";
@@ -8,7 +8,7 @@ import Notiflix from "notiflix";
 
 function Login() {
   const navigate = useNavigate();
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState(false);
   const [profile, setProfile] = profileData((state) => [
     state.data,
     state.setData,
@@ -19,22 +19,23 @@ function Login() {
   const [password, setPassword] = useState("");
   const login = async (e) => {
     e.preventDefault();
-    startTransition(async () => {
-      let response = await User.login({
-        email,
-        password,
-      });
-      if (response.status == true) {
-        setToken(response.jwt);
-        setProfile(response.data);
-        Notiflix.Notify.success("Logged In");
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
-      } else {
-        Notiflix.Notify.info(response.data);
-      }
+    setPending(true);
+    let response = await User.login({
+      email,
+      password,
     });
+    if (response.status == true) {
+      setToken(response.jwt);
+      setProfile(response.data);
+      Notiflix.Notify.success("Logged In");
+      setPending(false);
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    } else {
+      Notiflix.Notify.info(response.data);
+      setPending(false);
+    }
   };
 
   return (

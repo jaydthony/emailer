@@ -1890,12 +1890,6 @@ html {
   .btn[disabled] {
   pointer-events: none;
 }
-.btn-circle {
-  height: 3rem;
-  width: 3rem;
-  border-radius: 9999px;
-  padding: 0px;
-}
 .btn.loading,
     .btn.loading:hover {
   pointer-events: none;
@@ -2477,68 +2471,6 @@ html {
   --tw-text-opacity: 1;
   color: hsl(var(--inc, var(--nc)) / var(--tw-text-opacity));
 }
-.btn-outline.btn-primary .badge {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--p) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--p) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--pc) / var(--tw-text-opacity));
-}
-.btn-outline.btn-secondary .badge {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--s) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--s) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--sc) / var(--tw-text-opacity));
-}
-.btn-outline.btn-primary .badge-outline {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--p) / var(--tw-border-opacity));
-  background-color: transparent;
-  --tw-text-opacity: 1;
-  color: hsl(var(--p) / var(--tw-text-opacity));
-}
-.btn-outline.btn-secondary .badge-outline {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--s) / var(--tw-border-opacity));
-  background-color: transparent;
-  --tw-text-opacity: 1;
-  color: hsl(var(--s) / var(--tw-text-opacity));
-}
-.btn-outline.btn-primary:hover .badge {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--pc) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--pc) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--p) / var(--tw-text-opacity));
-}
-.btn-outline.btn-primary:hover .badge.outline {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--pc) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--pf, var(--p)) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--pc) / var(--tw-text-opacity));
-}
-.btn-outline.btn-secondary:hover .badge {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--sc) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--sc) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--s) / var(--tw-text-opacity));
-}
-.btn-outline.btn-secondary:hover .badge.outline {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--sc) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--sf, var(--s)) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--sc) / var(--tw-text-opacity));
-}
 .btm-nav>*:where(.active) {
   border-top-width: 2px;
   --tw-bg-opacity: 1;
@@ -2575,42 +2507,6 @@ html {
   outline: 2px solid hsl(var(--nf));
   outline-offset: 2px;
 }
-.btn-primary {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--p) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--p) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--pc) / var(--tw-text-opacity));
-}
-.btn-primary:hover,
-    .btn-primary.btn-active {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--pf, var(--p)) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--pf, var(--p)) / var(--tw-bg-opacity));
-}
-.btn-primary:focus-visible {
-  outline: 2px solid hsl(var(--p));
-}
-.btn-secondary {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--s) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--s) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--sc) / var(--tw-text-opacity));
-}
-.btn-secondary:hover,
-    .btn-secondary.btn-active {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--sf, var(--s)) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--sf, var(--s)) / var(--tw-bg-opacity));
-}
-.btn-secondary:focus-visible {
-  outline: 2px solid hsl(var(--s));
-}
 .btn.glass:hover,
     .btn.glass.btn-active {
   --glass-opacity: 25%;
@@ -2633,32 +2529,6 @@ html {
 }
 .btn-ghost:focus-visible {
   outline: 2px solid currentColor;
-}
-.btn-outline.btn-primary {
-  --tw-text-opacity: 1;
-  color: hsl(var(--p) / var(--tw-text-opacity));
-}
-.btn-outline.btn-primary:hover,
-      .btn-outline.btn-primary.btn-active {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--pf, var(--p)) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--pf, var(--p)) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--pc) / var(--tw-text-opacity));
-}
-.btn-outline.btn-secondary {
-  --tw-text-opacity: 1;
-  color: hsl(var(--s) / var(--tw-text-opacity));
-}
-.btn-outline.btn-secondary:hover,
-      .btn-outline.btn-secondary.btn-active {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--sf, var(--s)) / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--sf, var(--s)) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--sc) / var(--tw-text-opacity));
 }
 .btn-disabled,
   .btn-disabled:hover,
@@ -3229,19 +3099,6 @@ html {
 [dir="rtl"] .toggle:indeterminate {
   box-shadow: calc(var(--handleoffset) / 2) 0 0 2px var(--tglbg) inset, calc(var(--handleoffset) / -2) 0 0 2px var(--tglbg) inset, 0 0 0 2px var(--tglbg) inset;
 }
-.toggle-success:focus-visible {
-  outline: 2px solid hsl(var(--su));
-}
-.toggle-success:checked,
-    .toggle-success[checked="true"],
-    .toggle-success[aria-checked=true] {
-  border-color: hsl(var(--su) / var(--tw-border-opacity));
-  --tw-border-opacity: 0.1;
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--su) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--suc, var(--nc)) / var(--tw-text-opacity));
-}
 .toggle:disabled {
   cursor: not-allowed;
   --tw-border-opacity: 1;
@@ -3265,13 +3122,6 @@ html {
 .btm-nav-lg>*:where(.active) {
   border-top-width: 4px;
 }
-.btn-sm {
-  height: 2rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  min-height: 2rem;
-  font-size: 0.875rem;
-}
 .btn-md {
   height: 3rem;
   padding-left: 1rem;
@@ -3279,37 +3129,14 @@ html {
   min-height: 3rem;
   font-size: 0.875rem;
 }
-.btn-square:where(.btn-sm) {
-  height: 2rem;
-  width: 2rem;
-  padding: 0px;
-}
 .btn-square:where(.btn-md) {
   height: 3rem;
   width: 3rem;
   padding: 0px;
 }
-.btn-circle:where(.btn-xs) {
-  height: 1.5rem;
-  width: 1.5rem;
-  border-radius: 9999px;
-  padding: 0px;
-}
-.btn-circle:where(.btn-sm) {
-  height: 2rem;
-  width: 2rem;
-  border-radius: 9999px;
-  padding: 0px;
-}
 .btn-circle:where(.btn-md) {
   height: 3rem;
   width: 3rem;
-  border-radius: 9999px;
-  padding: 0px;
-}
-.btn-circle:where(.btn-lg) {
-  height: 4rem;
-  width: 4rem;
   border-radius: 9999px;
   padding: 0px;
 }
@@ -3474,9 +3301,8 @@ html {
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
-.mx-8 {
-  margin-left: 2rem;
-  margin-right: 2rem;
+.mb-4 {
+  margin-bottom: 1rem;
 }
 .ml-auto {
   margin-left: auto;
@@ -3516,9 +3342,6 @@ html {
 }
 .ml-2 {
   margin-left: 0.5rem;
-}
-.mb-4 {
-  margin-bottom: 1rem;
 }
 .block {
   display: block;
@@ -3573,6 +3396,9 @@ html {
 }
 .w-1\/4 {
   width: 25%;
+}
+.w-24 {
+  width: 6rem;
 }
 .min-w-full {
   min-width: 100%;
@@ -3748,9 +3574,6 @@ html {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
-.bg-none {
-  background-image: none;
-}
 .\!bg-none {
   background-image: none !important;
 }
@@ -3822,6 +3645,10 @@ html {
 .align-middle {
   vertical-align: middle;
 }
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -3829,10 +3656,6 @@ html {
 .text-5xl {
   font-size: 3rem;
   line-height: 1;
-}
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
 }
 .text-xs {
   font-size: 0.75rem;
@@ -4556,9 +4379,6 @@ ql-toolbar {
 .focus\:ring-opacity-50:focus {
   --tw-ring-opacity: 0.5;
 }
-.active\:bg-transparent:active {
-  background-color: transparent;
-}
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;
 }
@@ -4611,6 +4431,12 @@ ql-toolbar {
     line-height: 2.25rem;
   }
 }
+@media (min-width: 768px) {
+
+  .md\:w-24 {
+    width: 6rem;
+  }
+}
 @media (min-width: 1024px) {
 
   .lg\:-mx-8 {
@@ -4628,6 +4454,10 @@ ql-toolbar {
 
   .lg\:hidden {
     display: none;
+  }
+
+  .lg\:w-10 {
+    width: 2.5rem;
   }
 
   .lg\:bg-slate-800 {

@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import _, { isEmpty } from "underscore";
 import { User } from "../../sdk/User.sdk";
 import { authToken, profileData } from "../../context";
-import { FiEye, FiEyeOff, FiAtSign, FiMail, FiUser } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
 import Pop from "../../components/pop";
 import NoAuthHeader from "../../components/noAuthHeader";
 import Notiflix from "notiflix";
@@ -18,11 +18,8 @@ function Register() {
   const [showPassword, setShow] = useState("");
   const [err, setErr] = useState("");
   const navigate = useNavigate();
-  const [profile, setProfile] = profileData((state) => [
-    state.data,
-    state.setData,
-  ]);
-  const [token, setToken] = authToken((state) => [state.token, state.setToken]);
+  const [setProfile] = profileData((state) => [state.setData]);
+  const [setToken] = authToken((state) => [state.setToken]);
   const checkFields = () => {
     if (
       isEmpty(firstName) ||
@@ -81,7 +78,7 @@ function Register() {
             Register to your account to continue
           </p>
         </div>
-        <Pop data={err} type={"error"} />
+        {!isEmpty(err) && <Pop data={err} type={"error"} />}
         <form
           action="#"
           onSubmit={(e) => signup(e)}

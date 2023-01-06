@@ -43,8 +43,8 @@ const settingsData = create(
         })),
     }),
     {
-      name: "profileData", // unique name
+      name: "settingsData", // unique name
     }
   )
 );
-export { profileData, authToken, siteInfo ,settingsData};
+export { profileData, authToken, siteInfo, settingsData };

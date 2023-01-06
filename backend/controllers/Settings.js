@@ -65,7 +65,7 @@ export class Settings {
         }
       );
       if (updated) {
-        return this.response("updated");
+        return this.response("Updated",true);
       } else {
         return this.response("Unable to update");
       }

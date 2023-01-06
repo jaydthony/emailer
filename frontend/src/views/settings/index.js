@@ -1,8 +1,10 @@
 import { Notify } from "notiflix";
 import React, { useEffect, useRef, useState } from "react";
+import { FiExternalLink, FiInfo } from "react-icons/fi";
 import { isEmpty } from "underscore";
 import { settingsData } from "../../context";
 import { Settings } from "../../sdk/Settings.sdk";
+
 function Setting() {
   const form = useRef();
   const [defaultSettings, setDefaultSettings] = settingsData((state) => [
@@ -18,7 +20,6 @@ function Setting() {
   const [smtpUsername, setSmtpUsername] = useState("");
 
   useEffect(() => {
-    console.log(defaultSettings);
     if ("siteName" in defaultSettings) setSiteName(defaultSettings.siteName);
     if ("siteUrl" in defaultSettings) setSiteUrl(defaultSettings.siteUrl);
     if ("useAbstract" in defaultSettings)
@@ -48,7 +49,6 @@ function Setting() {
       return;
     }
     data.useAbstract = useAbstract;
-    console.log(data);
     let response = await Settings.save(data);
     if (response.status == true) {
       Notify.success("Saved");
@@ -72,8 +72,11 @@ function Setting() {
         </div>
         <div className="form-group">
           <label htmlFor="siteUrl">
-            Site URL e.g <span className="text-xs">https://mysite.com</span>
+            Site URL e.g <span className="text-sm">https://mysite.com</span>
           </label>
+          <span className="text-sm text-info">
+            This is used as the base for the unsubscribe endpoint.
+          </span>
           <input
             type="text"
             name="siteUrl"
@@ -84,7 +87,16 @@ function Setting() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="serviceProvider">Service Provider e.g Gmail</label>
+          <label htmlFor="serviceProvider" className="flex">
+            Service Provider e.g Gmail{" "}
+            <a
+              className="ml-2 flex items-center gap-2 text-info"
+              href="https://nodemailer.com/smtp/well-known/"
+              target="_blank"
+            >
+              Read More <FiExternalLink />
+            </a>
+          </label>
           <input
             type="text"
             name="serviceProvider"
@@ -118,6 +130,10 @@ function Setting() {
         </div>
         <div className="form-group">
           <label htmlFor="emailTemplate">Email Template Url</label>
+          <span className="text-md text-info">
+            External url where you have uploaded the email template. You may use
+            AWS S3 for instance.
+          </span>
           <input
             type="url"
             name="emailTemplateUrl"
@@ -141,12 +157,14 @@ function Setting() {
         </div>
 
         <div className="form-group">
-          <input
+          <button
             type="submit"
             value="Submit"
             name="Submit"
-            className="btn-secondary btn bg-slate-800"
-          />
+            className="btn-ghost btn  bg-slate-800 w-24 text-slate-100"
+          >
+            Save
+          </button>
         </div>
       </form>
     </>

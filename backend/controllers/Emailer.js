@@ -1,6 +1,4 @@
 import {} from "dotenv/config";
-import path from "path";
-import { fileURLToPath } from "url";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import _, { each, isEmpty, isObject } from "underscore";
@@ -26,20 +24,13 @@ export class Emailer {
     if (isEmpty(resp)) {
       return { error: "No settings found" };
     }
-    let {
-      emailTemplateUrl,
-      serviceProvider,
-      smtpPassword,
-      smtpUsername,
-      siteUrl,
-      siteName,
-    } = resp[0];
-    this.SMTP_PASSWORD = smtpPassword;
-    this.SMTP_USERNAME = smtpUsername;
-    this.emailTemplateUrl = emailTemplateUrl;
-    this.SERVICE = serviceProvider;
-    this.sitename = siteName;
-    this.unsubscribelink = siteUrl;
+    let info = resp[0];
+    this.SMTP_PASSWORD = info.smtpPassword;
+    this.SMTP_USERNAME = info.smtpUsername;
+    this.emailTemplateUrl = info.emailTemplateUrl;
+    this.SERVICE = info.serviceProvider;
+    this.sitename = info.siteName;
+    this.unsubscribelink = info.siteUrl;
   }
   async getSubscribers() {
     let all_subscribers = await subscriberSchema.find().select("email");
@@ -54,26 +45,23 @@ export class Emailer {
   /**
    *
    * @param {Object} data
-   * - objects holds subject, message, sender
+   * - objects holds subject, body, sender
    * @returns
    */
   async process(data) {
-    let { subject, sender, body, schedule, status } = data;
-    /**
-     * Get template
-     */
     each(data, function (elem) {
       if (isEmpty(data.elem)) {
         return `${data.elem} cannot be empty`;
       }
     });
+    let { subject, sender, body, schedule, status } = data;
     /**
      * Save data first
      */
     let saved = await this.save({ subject, sender, body, status, schedule });
     if (status == "immediate") {
       if (isObject(saved) && "_id" in saved) {
-        let sent = await this.send(saved.mailId);
+        await this.send(saved.mailId);
         return await this.getOne(saved.mailId);
       } else {
         return { error: "Unable to save email" };
@@ -87,10 +75,10 @@ export class Emailer {
     const { subject, sender, body, status, schedule } = data;
     let savedata = {
       mailId,
-      subject: subject,
+      subject,
       sender,
       status,
-      message: body,
+      body,
       schedule,
     };
     let mail = new emailSchema(savedata);
@@ -127,7 +115,7 @@ export class Emailer {
     }
     let email = await this.getOne(mailId);
     if (!isEmpty(email)) {
-      const { subject, message, sender } = email;
+      const { subject, body, sender } = email;
       // let saved = await this.save(savedata);
       try {
         let transporter = nodemailer.createTransport({
@@ -148,9 +136,9 @@ export class Emailer {
         let template = await this.getTemplate();
         list.forEach((email) => {
           const replacements = {
-            subject: subject,
+            subject,
             preview: subject,
-            body: message,
+            body,
             sitename: this.sitename,
             unsubscribelink: `${this.unsubscribelink}/unsubscribe/email=${email}`,
           };
@@ -209,11 +197,9 @@ export class Emailer {
     }
     return id;
   }
+
   /**
-   *
-   * @param {Object} replacements
-   * @param {String} template
-   * @returns String
+   * Grabs email template from external endpoint
    */
   async getTemplate() {
     return await axios
@@ -225,6 +211,12 @@ export class Emailer {
         console.log(error);
       });
   }
+  /**
+   *
+   * @param {Object} replacements
+   * @param {String} template
+   * @returns String
+   */
   parseHtml(replacements, source) {
     const handler = handlebars.compile(source);
     return handler(replacements);
