@@ -230,7 +230,3 @@ export class Emailer {
     return handler(replacements);
   }
 }
-(async () => {
-  let email = new Emailer();
-  email.send("95ebf37a023d8ab1");
-})();
