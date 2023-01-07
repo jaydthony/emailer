@@ -10,23 +10,23 @@ import moment from "moment";
 import * as timezone from "moment-timezone";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { FiArrowLeftCircle } from "react-icons/fi";
-import Notiflix from "notiflix";
+import Notiflix, { Notify } from "notiflix";
+import { Report } from "notiflix/build/notiflix-report-aio";
 
 function EditEmail() {
   const data = useLoaderData();
-  const [editorState, setEditorState] = React.useState("");
   const [isPending, setIsPending] = React.useState(false);
   const [timezone, setTimezone] = React.useState("");
-  const [date, setDate] = React.useState(new Date());
   const [subject, setSubject] = React.useState("");
   const [user] = profileData((state) => [state.data]);
   const [utcTime, setUtc] = React.useState("");
   const [iso, setIso] = React.useState("");
   const [status, setStatus] = React.useState("draft");
-  //
-  const [mailId, setMailId] = React.useState("draft");
+  const [mailId, setMailId] = React.useState("");
   const [msg, setMessage] = React.useState("");
   const [isEditable, setIsEditable] = React.useState(true);
+  const [date, setDate] = React.useState('');
+
 
   const modules = {
     toolbar: [
@@ -43,41 +43,51 @@ function EditEmail() {
   };
   //
   useEffect(() => {
+    setUtc(moment(date).utc().toString());
+    setTimezone(moment.tz.guess());
+    setIso(moment(date).utc().toISOString());
+  }, [date]);
+  //
+  useEffect(() => {
     if (!isEmpty(data)) {
       setMailId(data.mailId);
       setSubject(data.subject);
-      setMessage(data.message);
-      setEditorState(data.message);
+      setMessage(data.body);
       setStatus(data.status);
       setIsEditable(data.status == "sent" ? false : true);
       setDate(moment(data.schedule).toDate());
     }
   }, [data]);
   //
-  useEffect(() => {
-    setUtc(moment(date).utc().toString());
-    setTimezone(moment.tz.guess());
-    setIso(moment(date).utc().toISOString());
-  }, [date]);
+  
   //
   const sendEmail = async () => {
     setIsPending(true);
-    if (isEmpty(subject) || isEmpty(editorState)) {
+    if (isEmpty(subject) || isEmpty(msg)) {
       Notiflix.Notify.info("Please fill up subject and message body");
       setIsPending(false);
       return false;
     }
-    let data = {
+    let editInfo = {
+      mailId,
       subject,
       sender: user.email,
-      body: editorState,
+      body: msg,
       schedule: iso,
       status,
     };
-    let response = await Emailer.update(mailId, data);
-    setIsPending(false);
-    if (isObject(response)) {
-      Notiflix.Notify.success("Email saved");
+    try {
+      let response = await Emailer.update(mailId, editInfo);
+      setIsPending(false);
+      if (isObject(response)) {
+        Notiflix.Notify.success("Email sent");
+      }else{
+        Notify.info(response)
+      }
+    } catch (error) {
+      console.log(error);
+      Report.failure("An error occured", `${error}`);
+      setIsPending(false);
     }
   };
   const navigate = useNavigate();
@@ -179,8 +189,8 @@ function EditEmail() {
                   format={"dd-MM-y h:mm a"}
                   secondPlaceholder={"S"}
                   hourPlaceholder={"Hr"}
-                  minDate={new Date()}
                   onChange={setDate}
+                  defaultValue={date}
                   value={date}
                 />
                 <p className="text-sm ">

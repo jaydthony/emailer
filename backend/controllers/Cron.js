@@ -12,15 +12,19 @@ export class Cron {
   async checkSchedule() {
     let all = await emailSchema.find({ status: "schedule" });
     let emailer = new Emailer();
-    all.forEach(async (elem) => {
+    all.forEach((elem) => {
       let currentTime = moment();
       let scheduledTime = moment(elem.schedule);
       let diff = currentTime.diff(scheduledTime, "seconds");
-      if (diff < 60) {
-        await emailer.send(elem.mailId);
-        console.log("sent");
-      }else{
-        console.log('cron called');
+      if (diff < 30) {
+        try {
+          (async (elem) => {
+            let u = await emailer.send(elem.mailId);
+            console.log(u);
+          })(elem);
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
   }

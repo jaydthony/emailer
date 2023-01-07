@@ -21,7 +21,7 @@ export class Subscriber {
     ) {
       this.useAbstractValidation = settings[0]["useAbstract"];
     }
-    if (this.useAbstractValidation == true) {
+    if (this.useAbstractValidation == false) {
       return EmailValidator.validate(email);
     } else {
       const valid = await axios

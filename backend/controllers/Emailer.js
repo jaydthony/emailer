@@ -48,26 +48,34 @@ export class Emailer {
    * - objects holds subject, body, sender
    * @returns
    */
-  async process(data) {
-    each(data, function (elem) {
-      if (isEmpty(data.elem)) {
-        return `${data.elem} cannot be empty`;
-      }
-    });
+  async process(data, skipSave = false) {
+    let saved;
     let { subject, sender, body, schedule, status } = data;
     /**
      * Save data first
      */
-    let saved = await this.save({ subject, sender, body, status, schedule });
-    if (status == "immediate") {
+    if (skipSave == false) {
+      saved = await this.save({
+        subject,
+        sender,
+        body,
+        status,
+        schedule,
+      });
+    } else {
+      saved = data;
+    }
+
+    if (status !== "immediate") {
+      return saved;
+    }
+    if (status === "immediate") {
       if (isObject(saved) && "_id" in saved) {
         await this.send(saved.mailId);
         return await this.getOne(saved.mailId);
       } else {
         return { error: "Unable to save email" };
       }
-    } else {
-      return saved;
     }
   }
   async save(data) {
@@ -95,7 +103,7 @@ export class Emailer {
       new: true,
     });
     if (updated) {
-      return this.process(updated);
+      return this.process(updated, true);
     } else {
       return updated;
     }
@@ -132,49 +140,37 @@ export class Emailer {
          */
 
         let list = await this.getSubscribers();
-        let promises = [];
         let template = await this.getTemplate();
+        //loop over subscribers
         list.forEach((email) => {
           const replacements = {
             subject,
             preview: subject,
             body,
             sitename: this.sitename,
-            unsubscribelink: `${this.unsubscribelink}/unsubscribe/email=${email}`,
+            unsubscribelink: `${this.unsubscribelink}/unsubscribe?email=${email}`,
           };
           let htmltosend = this.parseHtml(replacements, template);
-          promises.push(
-            new Promise((resolve, reject) => {
-              transporter.sendMail(
-                {
-                  from: sender, // sender address
-                  to: email, // list of receivers
-                  subject: subject, // Subject line
-                  html: htmltosend, // html body
-                },
-                (err, response) => {
-                  if (err) {
-                    console.log(err);
-                    reject(err);
-                  } else {
-                    resolve(response);
-                  }
-                }
-              );
-            })
+
+          transporter.sendMail(
+            {
+              from: sender, // sender address
+              to: email, // list of receivers
+              subject: subject, // Subject line
+              html: htmltosend, // html body
+            },
+            (err, response) => {
+              if (err) {
+                console.log(err);
+                reject(err);
+              } else {
+                resolve(response);
+              }
+            }
           );
         });
-
-        return await Promise.all(promises)
-          .then(async (result) => {
-            // update email status to sent
-            transporter.close();
-            let sent = await this.update(mailId, { status: "sent" });
-            return result;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        // transporter.close();
+        return await this.update(mailId, { status: "sent" });
       } catch (error) {
         console.log(error);
       }

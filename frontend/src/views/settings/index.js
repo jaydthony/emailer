@@ -153,6 +153,7 @@ function Setting() {
             onChange={(e) =>
               e.target.checked ? setUseAbstract(true) : setUseAbstract(false)
             }
+            checked={useAbstract}
           />
         </div>
 

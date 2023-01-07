@@ -1,7 +1,7 @@
 import { Remote } from "./remote.js"
 
 export class Subscriber {
-    static remote = new Remote("http://127.0.0.1:8083/Subscriber")
+    static remote = new Remote("https://prefaycmuatwvulxvlof7nwbgi0olwlo.lambda-url.us-east-1.on.aws/")
 
     static async validate(email) {
         return Subscriber.remote.call("Subscriber.validate", email)  

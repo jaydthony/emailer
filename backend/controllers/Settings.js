@@ -2,6 +2,9 @@ import {} from "dotenv/config";
 import { each, isEmpty, random } from "underscore";
 import { db } from "./helper.js";
 import { settingsSchema } from "../models/settings.js";
+
+
+
 export class Settings {
   constructor() {
     db();

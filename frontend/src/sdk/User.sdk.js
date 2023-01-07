@@ -1,7 +1,7 @@
 import { Remote } from "./remote.js"
 
 export class User {
-    static remote = new Remote("http://127.0.0.1:8083/User")
+    static remote = new Remote("https://nn5sezruwrygykkocy5rii6x2y0zelhw.lambda-url.us-east-1.on.aws/")
 
     static async create(data) {
         return User.remote.call("User.create", data)  

@@ -8,7 +8,7 @@ import { Emailer } from "../../sdk/Emailer.sdk";
 import { isEmpty, isObject } from "underscore";
 import moment from "moment";
 import * as timezone from "moment-timezone";
-import Notiflix from "notiflix";
+import Notiflix, { Report } from "notiflix";
 
 function NewEmail() {
   const [editorState, setEditorState] = React.useState("");
@@ -54,13 +54,19 @@ function NewEmail() {
       schedule: iso,
       status,
     };
-    let response = await Emailer.process(data);
-    if (isObject(response)) {
-      Notiflix.Notify.success("Email sent");
-    } else {
-      Notiflix.Notify.info(response);
+    try{
+      let response = await Emailer.process(data);
+      if (isObject(response)) {
+        Notiflix.Notify.success("Email sent");
+      } else {
+        Notiflix.Notify.info(response);
+      }
+      setIsPending(false);
+    } catch (error) {
+      console.log(error);
+      Report.failure("An error occured", `${error}`);
+      setIsPending(false);
     }
-    setIsPending(false);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { Remote } from "./remote.js"
 
 export class Emailer {
-    static remote = new Remote("http://127.0.0.1:8083/Emailer")
+    static remote = new Remote("https://3cpxcugakzk2vgtl6roai4mwga0eyavw.lambda-url.us-east-1.on.aws/")
 
     static async init() {
         return Emailer.remote.call("Emailer.init")  
@@ -11,8 +11,8 @@ export class Emailer {
         return Emailer.remote.call("Emailer.getSubscribers")  
     }
     
-    static async process(data) {
-        return Emailer.remote.call("Emailer.process", data)  
+    static async process(data, ) {
+        return Emailer.remote.call("Emailer.process", data, )  
     }
 
     static async save(data) {
