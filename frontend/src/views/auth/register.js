@@ -61,7 +61,8 @@ function Register() {
             typeof response.data !== "Array" &&
             typeof response.data !== "String"
           ) {
-            Notiflix.Notify.info(response.data);
+            setErr(response.data)
+            // Notiflix.Notify.info(response.data);
           }
         }
       }

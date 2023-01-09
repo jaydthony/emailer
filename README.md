@@ -45,7 +45,7 @@ This is an embeddable form that can be deployed on any website.
 - In the js-widget folder, run _npm install_ to install all dependencies
 - Run _npm build_ to generate the _widget.js_ file. It will be saved in /js-widget/dist/
 - You can upload the widget.js file in the to any cdn of your choice.
-- To see the embeddable widget in action navigate to the _js-widget/demo/index.html_, *change the url* (http://127.0.0.1:8083/Subscriber/addSubscription) parameter to the link you copied earlier
+- To see the embeddable widget in action navigate to the _js-widget/demo/index.html_, *change the url* parameter to the link you copied earlier
   `mw('init', { url: 'CHANGE_TO_YOUR_URL' });`
 - Open the index.html to test.
-- Before sharing the widget, endure to change the line _/dist/widget.js_ to the link of your cdns
+- Before sharing the widget, ensure to change the line _YOUR_CDN_LINK_TO_WIDGET_ to the external url where you've saved the script.
