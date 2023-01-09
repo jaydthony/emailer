@@ -187,7 +187,7 @@ function Register() {
                 {showPassword && <FiEyeOff />}
               </span>
             </div>
-            <span className="text-sm">Password must contain atleast one capital case, one lowercase and number</span>
+            <span className="text-sm">Password must contain atleast 8 characters, one capital case, one lowercase and number</span>
           </div>
 
           <div className="flex items-center justify-between">
